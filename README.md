@@ -1,112 +1,81 @@
----
-title: FaceAttend Pro
-emoji: 📸
-colorFrom: blue
-colorTo: indigo
-sdk: docker
-pinned: false
-app_port: 7860
----
+# 📸 Gen-AI Smart Attendance System with Face Recognition
 
-# 📸 FaceAttend Pro
-### Next-Gen AI Smart Attendance System with Face Recognition
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.95%2B-green)
-![OpenCV](https://img.shields.io/badge/OpenCV-Face_Recognition-red)
-![License](https://img.shields.io/badge/License-MIT-yellow)
-
-FaceAttend Pro is a modern, full-stack attendance management system that uses **Computer Vision** to mark attendance automatically from Group picture. Features a real-time Teacher Dashboard, Email Notifications, and a Dispute Resolution System.
+An automated smart attendance management system powered by AI and facial recognition. This application simplifies classroom and organization attendance tracking by identifying faces from uploaded photos, matching them against registered profiles, and logging attendance automatically.
 
 ---
 
-## 🚀 Features
+## ✨ Features
 
-*   **Real-Time Face Recognition**: Marks attendance instantly using webcam feed.
-*   **📧 Automated Email Alerts**: Sends "Present" or "Absent" emails locally or globally (via Ngrok).
-*   **📱 Mobile-Ready Dashboard**: Responsive design for teachers to manage classes on the go.
-*   **⚖️ Dispute System**: Students can contest an "Absent" status by uploading photo proof.
-*   **📊 Analytics & Export**: Monthly attendance matrix view and Excel export.
-*   **🛡️ Secure**: Password hashing (Bcrypt) and Environment Variable protection.
+* **User Authentication:** Secure login and registration system with role-based access control.
+* **Classroom & Student Management:** Create custom classrooms and register individual student profiles with a reference photograph.
+* **Automated Face Recognition:** Upload group photos taken during class; the AI engine automatically detects and recognizes registered faces.
+* **Real-time Attendance Logging:** Attendance records update instantly in the database upon recognition.
+* **Data Export:** View structured attendance logs and export attendance records directly to CSV files.
 
 ---
 
 ## 🛠️ Tech Stack
 
-*   **Backend**: Python, FastAPI
-*   **Computer Vision**: OpenCV, Haarcascades
-*   **Database**: SQLite (Auto-managed)
-*   **Frontend**: HTML5, Jinja2 Templates, Tailwind CSS
-*   **Authentication**: Bcrypt Hashing, Cookie-based Sessions
+* **Backend:** Python, FastAPI / Uvicorn
+* **Database:** SQLite
+* **Authentication:** Passlib / CryptContext
+* **Templating:** Jinja2 (HTML/CSS)
+* **Computer Vision / AI:** OpenCV, Face Recognition Engine
 
 ---
 
-## 📦 Installation
+## 📁 Project Structure
 
-1.  **Clone the Repository**
-    ```bash
-    git clone https://github.com/prashantchauhan-12/Gen-AI-Smart-Attendance-System-with-Face-Recognition.git
-    cd Gen-AI-Smart-Attendance-System-with-Face-Recognition
-    ```
-
-2.  **Install Dependencies**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-3.  **Run the Application**
-    ```bash
-    python main.py
-    ```
-    *First run will automatically create `school_images`, `uploads` folders and initialize the database.*
-
-4.  **Access the Dashboard**
-    Open [http://localhost:8000](http://localhost:8000) in your browser.
-    *   **Default Admin**: `admin@school.com`
-    *   **Password**: `admin123`
+main.py                # Core application entry point & API routes
+auth.py                # Authentication & password hashing utilities
+database.py            # SQLite database connection & models
+recognition.py         # Face recognition logic & image processing
+recognition_engine.py  # AI detection engine pipeline
+requirements.txt       # Project dependencies
+templates/             # Jinja2 HTML templates
+static/                # CSS styles, JavaScript, and static assets
+school_images/         # Registered student reference headshots
+uploads/               # Class group photos & dispute logs
 
 ---
 
-## 📧 Email Configuration (Optional)
+## 🚀 Getting Started
 
-To enable real email sending, open `main.py` and update the `send_email` function with your credentials (use App Passwords for Gmail):
+### Prerequisites
 
-```python
-sender_email = "YOUR_EMAIL@gmail.com"
-sender_password = "YOUR_APP_PASSWORD"
-```
+Ensure you have Python 3.9+ installed on your system.
 
----
+### Installation
 
-## 📸 Screenshots
+1. **Clone the Repository**
+   git clone [https://github.com/guptadivyanshika/Smart-Attendance-System.git](https://github.com/guptadivyanshika/Smart-Attendance-System.git)
+   cd Smart-Attendance-System
 
+2. **Create and Activate a Virtual Environment**
+   * **Windows:**
+     python -m venv venv
+     .\venv\Scripts\activate
+   * **Linux/macOS:**
+     python3 -m venv venv
+     source venv/bin/activate
 
-<img width="1518" height="799" alt="image" src="https://github.com/user-attachments/assets/79f4c2a2-2865-4938-8d23-c94df185ff4c" />
+3. **Install Dependencies**
+   pip install -r requirements.txt
 
-<img width="1509" height="799" alt="image" src="https://github.com/user-attachments/assets/d11f8368-3379-4395-a4b7-cabfa87640aa" />
+4. **Run the Application**
+   python main.py
 
-<img width="1501" height="757" alt="image" src="https://github.com/user-attachments/assets/a28f897d-99da-4bbb-a427-3ba76e5cb2d1" />
-
-<img width="915" height="431" alt="image" src="https://github.com/user-attachments/assets/8aa98a42-9791-4e60-aca0-bc2949b24647" />
-
-<img width="1335" height="631" alt="image" src="https://github.com/user-attachments/assets/d240bed1-3f80-4aed-b389-f48911617c0f" />
-
-<img width="1502" height="747" alt="past logs" src="https://github.com/user-attachments/assets/6fd6869a-096a-4897-8807-6985f9365650" />
-
-<img width="1334" height="486" alt="image" src="https://github.com/user-attachments/assets/16e18774-906b-49ee-9919-3911ca9f268f" />
-
-<img width="1258" height="610" alt="image" src="https://github.com/user-attachments/assets/b1a7610a-d11a-4916-b3fd-d55051648ebd" />
-
-<img width="1447" height="792" alt="resolving dispute" src="https://github.com/user-attachments/assets/33a1b8ea-73b6-4c0a-bd86-b8b8b7f352ed" />
-
-<img width="1472" height="723" alt="updated attendance" src="https://github.com/user-attachments/assets/24d25fad-a08d-42eb-8a4a-00cab0b4ef24" />
-
+5. **Access the Web Interface**
+   Open your browser and navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
 ---
 
-## 🤝 Contributing
+## 📝 Usage Workflow
 
-Contributions are welcome! Please fork the repo and submit a Pull Request.
+1. **Sign In:** Log in using default credentials or register a new administrative account.
+2. **Add Classroom & Students:** Create a class and register students by uploading a clear front-facing reference photo per student.
+3. **Take Attendance:** Upload a group photo taken during class. The AI engine processes the image and records attendance for all recognized students.
+4. **Export Data:** View the attendance grid and download `.csv` log reports anytime.
 
-## 📄 License
+---
 
-MIT License.
