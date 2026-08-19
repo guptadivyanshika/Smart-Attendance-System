@@ -1,0 +1,10 @@
+opencv-contrib-python-headless
+numpy
+fastapi
+uvicorn
+python-multipart
+jinja2
+passlib[bcrypt]
+email-validator
+python-dotenv
+

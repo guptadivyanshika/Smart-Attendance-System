@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ classroom.name }} - FaceAttend</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Nav -->
+    <nav class="bg-gray-800 p-4 shadow-md flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <a href="/dashboard" class="text-blue-400 font-bold text-xl">← Dashboard</a>
+            <span class="text-gray-400">/</span>
+            <h1 class="text-xl font-bold">{{ classroom.name }}</h1>
+        </div>
+        <div>
+            <span class="mr-4">{{ teacher_email }}</span>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6">
+
+        <!-- Actions -->
+        <div class="flex gap-4 mb-8">
+            <button onclick="document.getElementById('register-modal').classList.remove('hidden')"
+                class="bg-green-600 hover:bg-green-500 px-6 py-3 rounded-lg font-bold shadow-lg flex items-center gap-2">
+                <span>➕ Register New Student</span>
+            </button>
+            <button onclick="document.getElementById('attendance-modal').classList.remove('hidden')"
+                class="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-lg font-bold shadow-lg flex items-center gap-2">
+                <span>📷 Take Attendance</span>
+            </button>
+            <a href="/classrooms/{{ classroom.id }}/export"
+                class="bg-yellow-600 hover:bg-yellow-500 px-6 py-3 rounded-lg font-bold shadow-lg flex items-center gap-2 text-white no-underline">
+                <span>📥 Export Excel/CSV</span>
+            </a>
+            <a href="/classrooms/{{ classroom.id }}/history"
+                class="bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-lg font-bold shadow-lg flex items-center gap-2 text-white no-underline">
+                <span>📜 View Past Logs</span>
+            </a>
+            <a href="/classrooms/{{ classroom.id }}/disputes"
+                class="bg-purple-600 hover:bg-purple-500 px-6 py-3 rounded-lg font-bold shadow-lg flex items-center gap-2 text-white no-underline">
+                <span>⚖️ Review Disputes</span>
+            </a>
+        </div>
+
+        <!-- Students Grid -->
+        <div class="mb-10">
+            <h2 class="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Students ({{ students|length }})</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                {% for student in students %}
+                <div class="relative bg-gray-800 rounded-lg overflow-hidden shadow-lg border border-gray-700 group">
+                    <!-- Delete Button -->
+                    <form action="/classrooms/{{ classroom.id }}/students/{{ student.id }}/delete" method="post"
+                        onsubmit="return confirm('Are you sure you want to delete {{ student.name }}? This will remove 23 attendance records and Face ID.');"
+                        class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                        <button type="submit"
+                            class="bg-red-600 hover:bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold shadow-md"
+                            title="Delete Student">
+                            🗑
+                        </button>
+                    </form>
+                    <img src="/{{ student.image_path }}" alt="{{ student.name }}" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold">{{ student.name }}</h3>
+                        <p class="text-gray-400 text-sm">Roll: {{ student.roll_number }}</p>
+                        <p class="text-gray-500 text-xs">{{ student.email }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+
+                {% if not students %}
+                <p class="text-gray-500 col-span-4 italic">No students registered yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Attendance History -->
+        <div>
+            <h2 class="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Recent Attendance</h2>
+            <div class="bg-gray-800 rounded-lg overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-700 text-gray-300">
+                        <tr>
+                            <th class="p-4">Date & Time</th>
+                            <th class="p-4">Student</th>
+                            <th class="p-4">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700">
+                        {% for log in history %}
+                        <tr class="hover:bg-gray-750">
+                            <td class="p-4 text-gray-300">{{ log.date }} <span class="text-xs text-gray-500">{{
+                                    log.timestamp }}</span></td>
+                            <td class="p-4 font-bold">{{ log.name }} <span class="text-xs font-normal text-gray-500">({{
+                                    log.roll_number }})</span></td>
+                            <td class="p-4">
+                                {% if log.status == 'Present' %}
+                                <span class="bg-green-900 text-green-300 px-2 py-1 rounded text-xs font-bold">{{
+                                    log.status }}</span>
+                                {% else %}
+                                <span class="bg-red-900 text-red-300 px-2 py-1 rounded text-xs font-bold">{{ log.status
+                                    }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% if not history %}
+                <div class="p-6 text-center text-gray-500">No attendance records found.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="register-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+        <div class="bg-gray-800 p-8 rounded-lg w-96 shadow-2xl border border-gray-600">
+            <h3 class="text-xl font-bold mb-4 text-green-400">Register Student</h3>
+            <form action="/classrooms/{{ classroom.id }}/register" method="post" enctype="multipart/form-data"
+                class="space-y-4">
+                <input type="text" name="name" placeholder="Full Name" required
+                    class="w-full p-2 rounded bg-gray-700 border border-gray-600">
+                <input type="text" name="roll_number" placeholder="Roll Number" required
+                    class="w-full p-2 rounded bg-gray-700 border border-gray-600">
+                <input type="email" name="email" placeholder="Email Address" required
+                    class="w-full p-2 rounded bg-gray-700 border border-gray-600">
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Profile Photo (Face)</label>
+                    <input type="file" name="file" accept="image/*" required
+                        class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-gray-700 file:text-white hover:file:bg-gray-600">
+                </div>
+                <div class="flex gap-2 justify-end mt-6">
+                    <button type="button" onclick="document.getElementById('register-modal').classList.add('hidden')"
+                        class="px-4 py-2 bg-gray-600 rounded hover:bg-gray-500">Cancel</button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-green-600 rounded hover:bg-green-500 font-bold">Register</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Attendance Modal -->
+    <div id="attendance-modal"
+        class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+        <div class="bg-gray-800 p-8 rounded-lg w-96 shadow-2xl border border-gray-600">
+            <h3 class="text-xl font-bold mb-4 text-blue-400">Take Attendance</h3>
+            <p class="text-sm text-gray-400 mb-4">Upload a group photo of the class. The system will identify students
+                and mark them present.</p>
+            <form action="/classrooms/{{ classroom.id }}/attendance" method="post" enctype="multipart/form-data"
+                class="space-y-4">
+                <div>
+                    <input type="file" name="file" accept="image/*" required
+                        class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-gray-700 file:text-white hover:file:bg-gray-600">
+                </div>
+                <div class="flex gap-2 justify-end mt-6">
+                    <button type="button" onclick="document.getElementById('attendance-modal').classList.add('hidden')"
+                        class="px-4 py-2 bg-gray-600 rounded hover:bg-gray-500">Cancel</button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 rounded hover:bg-blue-500 font-bold">Process</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>

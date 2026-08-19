@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dispute Attendance - FaceAttend</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
+    <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-lg border border-gray-700">
+        <h2 class="text-3xl font-bold mb-2 text-yellow-500">Dispute Attendance</h2>
+        <p class="text-gray-400 mb-6">Marked absent by mistake? Submit your proof below.</p>
+
+        <form action="/dispute" method="post" enctype="multipart/form-data" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">Student ID</label>
+                <input type="number" name="student_id" placeholder="Enter your ID"
+                    value="{{ request.query_params.get('student_id', '') }}" required
+                    class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-yellow-500 outline-none">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Explanation / Notes</label>
+                <textarea name="notes" rows="3" placeholder="I was sitting in the back row..." required
+                    class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-yellow-500 outline-none"></textarea>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Proof Photo (Selfie/Notes)</label>
+                <input type="file" name="file" required
+                    class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-gray-700 file:text-white hover:file:bg-gray-600">
+            </div>
+
+            <button type="submit"
+                class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-3 rounded mt-4 transition">Submit
+                Dispute</button>
+        </form>
+
+        <div class="mt-6 text-center">
+            <a href="/" class="text-sm text-gray-500 hover:text-white">← Back to Home</a>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="grid">
+    <div class="card">
+        <h2>📷 Mark Attendance</h2>
+        <p>Upload a class group photo to automatically mark attendance for all present students.</p>
+
+        <form action="/process_attendance" method="post" enctype="multipart/form-data">
+            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                <p>Click to Upload Group Photo</p>
+                <input type="file" id="fileInput" name="file" accept="image/*" style="display: none"
+                    onchange="this.form.submit()">
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>✨ Quick Stats</h2>
+        <div style="margin-top: 1rem">
+            <h3>{{ student_count }}</h3>
+            <p style="color: var(--text-muted)">Registered Students</p>
+        </div>
+        <div style="margin-top: 1rem">
+            <h3>{{ attendance_today }}</h3>
+            <p style="color: var(--text-muted)">Present Today</p>
+        </div>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 2rem">
+    <h2>Recent Activity</h2>
+    {% if recent_logs %}
+    <table>
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Time</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in recent_logs %}
+            <tr>
+                <td>{{ log.name }}</td>
+                <td>{{ log.time }}</td>
+                <td><span style="color: #4ade80">Present</span></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: var(--text-muted)">No attendance marked today yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

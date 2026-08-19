@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}History{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Attendance History</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Student Name</th>
+                <th>Roll Number</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in history %}
+            <tr>
+                <td>{{ record.date }}</td>
+                <td>{{ record.name }}</td>
+                <td>{{ record.roll_number }}</td>
+                <td>{{ record.time }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Monthly Attendance - {{ classroom.name }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .th-date {
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .cell-present {
+            background-color: #064e3b;
+            color: #6ee7b7;
+            font-weight: bold;
+        }
+
+        .cell-absent {
+            background-color: #450a0a;
+            color: #fca5a5;
+            font-weight: bold;
+        }
+
+        .cell-none {
+            background-color: #1f2937;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Nav -->
+    <nav class="bg-gray-800 p-4 shadow-md mb-6">
+        <div class="container mx-auto flex items-center gap-4">
+            <a href="/classrooms/{{ classroom.id }}" class="text-blue-400 font-bold text-xl">← Back to {{ classroom.name
+                }}</a>
+            <h1 class="text-xl font-bold border-l border-gray-600 pl-4">Monthly Attendance Matrix</h1>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6 overflow-x-auto">
+
+        <div class="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-4">
+            <h2 class="text-2xl font-bold mb-4">Attendance Report (Last 30 Days)</h2>
+
+            {% if not students %}
+            <p class="text-gray-500">No students found.</p>
+            {% else %}
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr>
+                        <th class="p-3 text-left border-b border-gray-600 w-48">Student Name</th>
+                        {% for date in dates %}
+                        <th class="p-2 border-b border-gray-600 th-date text-xs">{{ date }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr class="hover:bg-gray-750">
+                        <td class="p-3 border-b border-gray-700 font-bold whitespace-nowrap">
+                            {{ student.name }}
+                            <span class="block text-xs text-gray-500">Roll: {{ student.roll_number }}</span>
+                        </td>
+                        {% for date in dates %}
+                        {% set key = (student.id, date) %}
+                        {% if key in attendance_map and attendance_map[key] == 'Present' %}
+                        <td class="p-2 border-b border-gray-700 text-center cell-present">P</td>
+                        {% else %}
+                        <!-- Show Absent for explicit 'Absent' status OR missing records -->
+                        <td class="p-2 border-b border-gray-700 text-center cell-absent">A</td>
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+
+    </div>
+</body>
+
+</html>
